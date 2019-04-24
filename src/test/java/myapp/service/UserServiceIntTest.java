@@ -2,10 +2,7 @@ package myapp.service;
 
 import myapp.WebliotecaApp;
 import myapp.config.Constants;
-import myapp.domain.PersistentToken;
 import myapp.domain.User;
-import myapp.repository.PersistentTokenRepository;
-import myapp.repository.search.UserSearchRepository;
 import myapp.repository.UserRepository;
 import myapp.service.dto.UserDTO;
 import myapp.service.util.RandomUtil;
@@ -26,14 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -47,21 +41,10 @@ import static org.mockito.Mockito.when;
 public class UserServiceIntTest {
 
     @Autowired
-    private PersistentTokenRepository persistentTokenRepository;
-
-    @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private UserService userService;
-
-    /**
-     * This repository is mocked in the myapp.repository.search test package.
-     *
-     * @see myapp.repository.search.UserSearchRepositoryMockConfiguration
-     */
-    @Autowired
-    private UserSearchRepository mockUserSearchRepository;
 
     @Autowired
     private AuditingHandler auditingHandler;
@@ -73,7 +56,6 @@ public class UserServiceIntTest {
 
     @Before
     public void init() {
-        persistentTokenRepository.deleteAll();
         user = new User();
         user.setLogin("johndoe");
         user.setPassword(RandomStringUtils.random(60));
@@ -86,19 +68,6 @@ public class UserServiceIntTest {
 
         when(dateTimeProvider.getNow()).thenReturn(Optional.of(LocalDateTime.now()));
         auditingHandler.setDateTimeProvider(dateTimeProvider);
-    }
-
-    @Test
-    @Transactional
-    public void testRemoveOldPersistentTokens() {
-        userRepository.saveAndFlush(user);
-        int existingCount = persistentTokenRepository.findByUser(user).size();
-        LocalDate today = LocalDate.now();
-        generateUserToken(user, "1111-1111", today);
-        generateUserToken(user, "2222-2222", today.minusDays(32));
-        assertThat(persistentTokenRepository.findByUser(user)).hasSize(existingCount + 2);
-        userService.removeOldPersistentTokens();
-        assertThat(persistentTokenRepository.findByUser(user)).hasSize(existingCount + 1);
     }
 
     @Test
@@ -189,20 +158,6 @@ public class UserServiceIntTest {
         userService.removeNotActivatedUsers();
         users = userRepository.findAllByActivatedIsFalseAndCreatedDateBefore(now.minus(3, ChronoUnit.DAYS));
         assertThat(users).isEmpty();
-
-        // Verify Elasticsearch mock
-        verify(mockUserSearchRepository, times(1)).delete(user);
-    }
-
-    private void generateUserToken(User user, String tokenSeries, LocalDate localDate) {
-        PersistentToken token = new PersistentToken();
-        token.setSeries(tokenSeries);
-        token.setUser(user);
-        token.setTokenValue(tokenSeries + "-data");
-        token.setTokenDate(localDate);
-        token.setIpAddress("127.0.0.1");
-        token.setUserAgent("Test agent");
-        persistentTokenRepository.saveAndFlush(token);
     }
 
     @Test
@@ -232,9 +187,6 @@ public class UserServiceIntTest {
         assertThat(userRepository.findOneByLogin("johndoe")).isPresent();
         userService.removeNotActivatedUsers();
         assertThat(userRepository.findOneByLogin("johndoe")).isNotPresent();
-
-        // Verify Elasticsearch mock
-        verify(mockUserSearchRepository, times(1)).delete(user);
     }
 
 }

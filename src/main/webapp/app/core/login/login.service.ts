@@ -1,16 +1,11 @@
 import { Injectable } from '@angular/core';
 
 import { AccountService } from 'app/core/auth/account.service';
-import { AuthServerProvider } from 'app/core/auth/auth-session.service';
-import { JhiTrackerService } from 'app/core/tracker/tracker.service';
+import { AuthServerProvider } from 'app/core/auth/auth-jwt.service';
 
 @Injectable({ providedIn: 'root' })
 export class LoginService {
-    constructor(
-        private accountService: AccountService,
-        private trackerService: JhiTrackerService,
-        private authServerProvider: AuthServerProvider
-    ) {}
+    constructor(private accountService: AccountService, private authServerProvider: AuthServerProvider) {}
 
     login(credentials, callback?) {
         const cb = callback || function() {};
@@ -19,7 +14,6 @@ export class LoginService {
             this.authServerProvider.login(credentials).subscribe(
                 data => {
                     this.accountService.identity(true).then(account => {
-                        this.trackerService.sendActivity();
                         resolve(data);
                     });
                     return cb();
@@ -31,6 +25,10 @@ export class LoginService {
                 }
             );
         });
+    }
+
+    loginWithToken(jwt, rememberMe) {
+        return this.authServerProvider.loginWithToken(jwt, rememberMe);
     }
 
     logout() {

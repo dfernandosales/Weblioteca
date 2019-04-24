@@ -13,21 +13,18 @@
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
 
+eureka:
+    client:
+        enabled: false
+    instance:
+        appname: Weblioteca
+        instanceId: Weblioteca:${spring.application.instance-id:${random.value}}
 
 spring:
     application:
         name: Weblioteca
     cache:
         type: simple
-    cloud:
-        stream:
-            kafka:
-                binder:
-                    brokers: localhost
-                    zk-nodes: localhost
-            bindings:
-                output:
-                    destination: topic-jhipster
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:h2:mem:Weblioteca;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
@@ -54,11 +51,6 @@ spring:
             hibernate.generate_statistics: false
             hibernate.hbm2ddl.auto: validate
             hibernate.jdbc.time_zone: UTC
-    data:
-        elasticsearch:
-            properties:
-                path:
-                    home: target/elasticsearch
     liquibase:
         contexts: test
     mail:
@@ -98,9 +90,12 @@ jhipster:
         from: test@localhost
         base-url: http://127.0.0.1:8080
     security:
-        remember-me:
-            # security key (this key should be unique for your application, and kept secret)
-            key: cba04e7a95dcce2bfcda813705fdada8042c7b70d85e73d6ad2650705e45784d4ec8192dcf7225dc6debb73307542b463448
+        authentication:
+            jwt:
+                # This token must be encoded using Base64 (you can type `echo 'secret-key'|base64` on your command line)
+                base64-secret: NjNlY2IwOWY5ODFhOGNlYzIzOTkzNzliZTA2NWExY2FkMjMxZGIzZDU2ZTZiN2I1OWVmNjI5ZmRiMGNjOWNiMTc2N2RkYjRiZDQ4OWQwOTY0M2I4ZDZjMmQyMGJkMTk2NmFlOTFlOWU1ODNkYjNiYTRmMGQ4Njc1NzQ1ZjliNmY=
+                # Token is valid 24 hours
+                token-validity-in-seconds: 86400
     metrics:
         logs: # Reports metrics in the logs
             enabled: true
