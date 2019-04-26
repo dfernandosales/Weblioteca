@@ -5,6 +5,19 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
-    <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
-    <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
+    <include file="config/liquibase/changelog/20190424190259_added_entity_Editora.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190424190300_added_entity_Exemplar.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190424190301_added_entity_Livro.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190424190302_added_entity_Emprestimo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190424190303_added_entity_Reserva.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190424190304_added_entity_Autor.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190424190305_added_entity_Devolucao.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190424190306_added_entity_constraints_Exemplar.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190424190307_added_entity_constraints_Livro.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190424190308_added_entity_constraints_Emprestimo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190424190309_added_entity_constraints_Reserva.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190424190310_added_entity_constraints_Devolucao.xml" relativeToChangelogFile="false"/>
+
+
+
 </databaseChangeLog>

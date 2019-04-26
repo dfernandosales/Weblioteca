@@ -44,9 +44,9 @@ spring:
             indent-output: true
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:postgresql://localhost:5432/Weblioteca
-        username: Weblioteca
-        password:
+        url: jdbc:postgresql://ellinia.theosirian.com:5432/root
+        username: root
+        password: root
         hikari:
             poolName: Hikari
             auto-commit: false
